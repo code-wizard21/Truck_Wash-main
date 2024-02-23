@@ -1,0 +1,1 @@
+INSERT INTO "customers" ("id", "CustomerName", "CarNumber", "Detail", "Date", "State", "createdAt", "updatedAt") VALUES (1, 'company3', 'e4523423534', 'polishing, truck polishing', '2024-02-23', 'request', '2024-02-23', '2024-02-23');
