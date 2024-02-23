@@ -12,9 +12,9 @@ const DriverTask = lazy(() => import("../pages/driver/index"));
 const WasherTask = lazy(() => import("../pages/washer"));
 const LandingPage = lazy(() => import("../pages/landing"));
 const Admin = lazy(() => import("../pages/admin"));
-const AdminRole = lazy(() => import("../pages/admin/role/admin-role"));
-const DriverRole = lazy(() => import("../pages/admin/role/driver-role"));
-const WasherRole = lazy(() => import("../pages/admin/role/washer-role"));
+const Admin_Role = lazy(() => import("../pages/admin/role/admin-role"));
+const Driver_Role = lazy(() => import("../pages/admin/role/driver-role"));
+const Washer_Role = lazy(() => import("../pages/admin/role/washer-role"));
 
 function RoutesDefined() {
   return (
@@ -28,13 +28,11 @@ function RoutesDefined() {
             <Route path="/client/checktask" element={<CheckTask />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/washer/checktask" element={<WasherTask />} />
-
             <Route path="/admin" element={<Admin />}>
-              <Route index element={<AdminRole />} />
-              <Route path="driver-role" element={<DriverRole />} />
-              <Route path="washer-role" element={<WasherRole />} />
+              <Route index element={<Admin_Role />} />
+              <Route path="driver-role" element={<Driver_Role />} />
+              <Route path="washer-role" element={<Washer_Role />} />
             </Route>
-
             {/* Add other routes as needed */}
           </Routes>
         </Suspense>
