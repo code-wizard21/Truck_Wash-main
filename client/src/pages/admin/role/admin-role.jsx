@@ -60,18 +60,25 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function CollapsibleRow({ row, isMobile }) {
+function CollapsibleRow({ props, row, isMobile }) {
   const [open, setOpen] = useState(false);
+  const getCustomer = () => {
+    Http.get("/api/auth/getCustomer")
+      .then((data) => {
+        // console.log(data.data)
+        props.setCustomList(data.data);
+      })
+      .catch((err) => {});
+  };
   const onDelete = (data) => {
     console.log(data);
-    // Http.post("/api/cus/deleteItemCustom", {
-    //   id: data,
-    //   name: props.auth.user.name,
-    // })
-    //   .then((data) => {
-    //     props.setData(data.data);
-    //   })
-    //   .catch((err) => {});
+    Http.post("/api/auth/deleteItemCustom", {
+      id: data,
+    })
+      .then((data) => {
+        getCustomer();
+      })
+      .catch((err) => {});
   };
   return (
     <>
@@ -276,7 +283,12 @@ export default function ResponsiveCollapsibleTable() {
             </TableHead>
             <TableBody>
               {cutomerList.map((row) => (
-                <CollapsibleRow key={row.id} row={row} isMobile={isMobile} />
+                <CollapsibleRow
+                  props={setCustomList}
+                  key={row.id}
+                  row={row}
+                  isMobile={isMobile}
+                />
               ))}
             </TableBody>
           </Table>

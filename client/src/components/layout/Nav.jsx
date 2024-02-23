@@ -29,22 +29,14 @@ function ResponsiveAppBar() {
       setisLogIn(false);
     }
   }, [auth.isLoggedIn]);
+
   const settings = isLogIn ? ["Change Password", "Logout"] : ["LogIn"];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
-  const [elevateOnScroll, setElevateOnScroll] = useState(false);
+
   const dispatch = useDispatch();
-  const handleScroll = () => {
-    const elevated = window.scrollY > 0;
-    setElevateOnScroll(elevated);
-  };
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -67,11 +59,7 @@ function ResponsiveAppBar() {
   };
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   return (
-    <AppBar
-      position="fixed"
-      sx={{ bgcolor: "white" }}
-      elevation={elevateOnScroll ? 4 : 0}
-    >
+    <AppBar position="static" sx={{ bgcolor: "white" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <img src={logo} alt="logo" sx={{ width: isMobile ? 100 : 150 }} />

@@ -17,7 +17,6 @@ import {
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import Http from "../../../utils/http";
 
-
 function CheckoutPage() {
   const [trackCode, setTrackCode] = useState("");
   const [description, setDescription] = useState("");
@@ -37,15 +36,13 @@ function CheckoutPage() {
     } else {
       setShowErrors(false);
 
-      Http
-        .post("/api/cus/register", {
-          name: auth.user.name,
-          cardNum: trackCode,
-          detail: description,
-          date: date,
-        })
+      Http.post("/api/cus/register", {
+        name: auth.user.name,
+        cardNum: trackCode,
+        detail: description,
+        date: date,
+      })
         .then((data) => {
-          console.log(data);
           if (data.data) {
             navigate("/client/dashboard");
           }
