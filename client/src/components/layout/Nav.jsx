@@ -1,5 +1,5 @@
-import * as React from "react";
-import {  useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,28 +15,43 @@ import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import logo from "../../assets/images/photo.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Change Password", "Logout", "LogIn"];
-
 function ResponsiveAppBar() {
   const theme = useTheme();
-  const dispatch = useDispatch();
+  const [isLogIn, setisLogIn] = useState(false);
+  const auth = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (auth.isLoggedIn) {
+      setisLogIn(true);
+    } else {
+      setisLogIn(false);
+    }
+  }, [auth.isLoggedIn]);
+  const settings = isLogIn ? ["Change Password", "Logout"] : ["LogIn"];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
-  
+  const [elevateOnScroll, setElevateOnScroll] = useState(false);
+  const dispatch = useDispatch();
+  const handleScroll = () => {
+    const elevated = window.scrollY > 0;
+    setElevateOnScroll(elevated);
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
   const handleMenuItemClick = (e) => {
     if (e == "LogIn") {
       navigate("/login");
@@ -50,11 +65,14 @@ function ResponsiveAppBar() {
   };
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   return (
-    <AppBar position="static" sx={{ bgcolor: "white" }}>
+    <AppBar
+      position="fixed"
+      sx={{ bgcolor: "white" }}
+      elevation={elevateOnScroll ? 4 : 0}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <img src={logo} alt="logo" sx={{ width: isMobile ? 100 : 150 }} />
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -92,7 +110,6 @@ function ResponsiveAppBar() {
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
