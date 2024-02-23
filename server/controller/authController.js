@@ -5,7 +5,7 @@ const db = require("../models");
 const Userlist = db.userlist;
 exports.Register = async (req, res) => {
   console.log(req.body);
- 
+
   // Create a Userlist
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   const userlist = {
@@ -41,7 +41,7 @@ exports.getCustomer = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
-    console.log(req.body)
+    console.log(req.body);
     const user = await Userlist.findOne({
       where: { Email: req.body.Email },
     });
@@ -96,6 +96,22 @@ exports.authDelete = async (req, res) => {
         id: id,
       },
     });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+exports.deleteItemCustom = async (req, res) => {
+  console.log(req.body);
+
+  const id = req.body.id;
+  try {
+    const user = await Userlist.destroy({
+      where: {
+        PhoneNumber: id,
+      },
+    });
+
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });

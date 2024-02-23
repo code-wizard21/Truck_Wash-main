@@ -5,8 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Sidebar from "./sidebar";
 import { Outlet } from "react-router-dom";
 
-
-const AdminStyled = styled('div')(({ theme }) => ({
+const AdminStyled = styled("div")(({ theme }) => ({
   root: {
     display: "flex",
   },
@@ -28,8 +27,12 @@ function Admin() {
     <AdminStyled>
       <CssBaseline />
       <Grid container>
-        <Grid item xs={12} sm={3} marginBottom={5}>
-          <Sidebar handleDrawerOpen={handleDrawerOpen} handleDrawerClose={handleDrawerClose} draweropen={open}/>
+        <Grid item xs={12} sm={3}>
+          <Sidebar
+            handleDrawerOpen={handleDrawerOpen}
+            handleDrawerClose={handleDrawerClose}
+            draweropen={open}
+          />
         </Grid>
         <Grid item xs={12} sm={9}>
           <Outlet />
