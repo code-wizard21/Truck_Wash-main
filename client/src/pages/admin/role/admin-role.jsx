@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -17,20 +17,14 @@ import {
 } from "@mui/material";
 import { TextField, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import Modal from "@mui/material/Modal";
+import TablePagination from "@mui/material/TablePagination";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import ClearIcon from "@mui/icons-material/Clear";
 import { styled } from "@mui/material/styles";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Http from "../../../utils/http";
 // ... Your rows data here
-function createData(cno,cname, cpass, cnumber) {
-  return { cno,cname, cpass, cnumber };
-}
-const rows = [
-  createData('1',"INC", "******", " (306) 529.6419"),
-  createData('2',"RTC", "******", " (306) 529.6419"),
-  createData('3',"IDH", "******", " (306) 529.6419"),
-];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -68,7 +62,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function CollapsibleRow({ row, isMobile }) {
   const [open, setOpen] = useState(false);
-
+  const onDelete = (data) => {
+    console.log(data);
+    // Http.post("/api/cus/deleteItemCustom", {
+    //   id: data,
+    //   name: props.auth.user.name,
+    // })
+    //   .then((data) => {
+    //     props.setData(data.data);
+    //   })
+    //   .catch((err) => {});
+  };
   return (
     <>
       <StyledTableRow
@@ -84,27 +88,31 @@ function CollapsibleRow({ row, isMobile }) {
         )}
         <TableCell component="th" scope="row">
           <div className="accept">
-            <span> {row.cno}</span>
+            <span> {row.id}</span>
           </div>
         </TableCell>
         <TableCell component="th" scope="row">
           <div className="accept">
-            <span> {row.cname}</span>
+            <span> {row.Email}</span>
           </div>
         </TableCell>
 
         {!isMobile && (
           <TableCell component="th" scope="row">
             <div className="accept">
-              <span> {row.cpass}</span>
+              <span> {row.Password}</span>
             </div>
           </TableCell>
         )}
-        {!isMobile && <TableCell>{row.cnumber}</TableCell>}
+        {!isMobile && <TableCell>{row.PhoneNumber}</TableCell>}
         {!isMobile && (
           <>
             <TableCell>
-              <IconButton color="secondary" aria-label="add an alarm">
+              <IconButton
+                color="secondary"
+                aria-label="add an alarm"
+                onClick={() => onDelete(row.PhoneNumber)}
+              >
                 <ClearIcon />
               </IconButton>
             </TableCell>
@@ -141,7 +149,11 @@ function CollapsibleRow({ row, isMobile }) {
                       </TableCell>
 
                       <TableCell align="right">
-                        <IconButton color="secondary" aria-label="add an alarm">
+                        <IconButton
+                          color="secondary"
+                          aria-label="add an alarm"
+                          onClick={() => onDelete(row.PhoneNumber)}
+                        >
                           <ClearIcon />
                         </IconButton>
                       </TableCell>
@@ -159,13 +171,57 @@ function CollapsibleRow({ row, isMobile }) {
 export default function ResponsiveCollapsibleTable() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [clientId, setClientId] = useState("");
+  const [password, setPassword] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [clientNumber, setCliNumber] = useState("");
+  const [cutomerList, setCustomList] = useState([]);
+  const [open, setOpen] = useState(false);
 
-  const [open, setOpen] = React.useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleChangePage = (event, newPage) => {
+    console.log(newPage, event, "123123123");
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    console.log(event.target.value);
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+  useEffect(() => {
+    getCustomer();
+  }, []);
+
+  const getCustomer = () => {
+    Http.get("/api/auth/getCustomer")
+      .then((data) => {
+        // console.log(data.data)
+        setCustomList(data.data);
+      })
+      .catch((err) => {});
+  };
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleOk = () => {
+    setOpen(false);
+    Http.post("/api/auth/register", {
+      email: clientId,
+      password: password,
+      phone: clientNumber,
+      name: clientName,
+    })
+      .then((data) => {
+        console.log("customer");
+        getCustomer();
+      })
+      .catch((err) => {});
   };
 
   return (
@@ -204,7 +260,7 @@ export default function ResponsiveCollapsibleTable() {
           <Table aria-label="collapsible table">
             <TableHead>
               <TableRow>
-                 {isMobile && <TableCell />}
+                {isMobile && <TableCell />}
                 {isMobile && <TableCell />}
                 <StyledTableCell>NO</StyledTableCell>
                 <StyledTableCell>ID</StyledTableCell>
@@ -219,11 +275,20 @@ export default function ResponsiveCollapsibleTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <CollapsibleRow key={row.name} row={row} isMobile={isMobile} />
+              {cutomerList.map((row) => (
+                <CollapsibleRow key={row.id} row={row} isMobile={isMobile} />
               ))}
             </TableBody>
           </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={cutomerList.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </TableContainer>
       </Container>
 
@@ -247,11 +312,35 @@ export default function ResponsiveCollapsibleTable() {
 
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
+                <Grid item xs={12} sm={12}>
+                  <TextField
+                    id="standard-basic"
+                    name="carcode"
+                    label="ID"
+                    variant="standard"
+                    fullWidth
+                    value={clientId}
+                    onChange={(e) => setClientId(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  <TextField
+                    id="standard-basic"
+                    name="carcode"
+                    label="Password"
+                    variant="standard"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    fullWidth
+                  />
+                </Grid>
                 <TextField
                   id="standard-basic"
                   name="carcode"
                   label="Name"
                   variant="standard"
+                  value={clientName}
+                  onChange={(e) => setClientName(e.target.value)}
                   fullWidth
                 />
               </Grid>
@@ -262,12 +351,14 @@ export default function ResponsiveCollapsibleTable() {
                   name="carcode"
                   label="Number"
                   variant="standard"
+                  value={clientNumber}
+                  onChange={(e) => setCliNumber(e.target.value)}
                   fullWidth
                 />
               </Grid>
             </Grid>
             <Box display="flex" justifyContent="right" m={1} p={1}>
-              <Button variant="contained" color="primary" onClick={handleClose}>
+              <Button variant="contained" color="primary" onClick={handleOk}>
                 OK
               </Button>
               <Button onClick={handleClose}>Close</Button>

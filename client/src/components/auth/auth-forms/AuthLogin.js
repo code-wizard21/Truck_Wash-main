@@ -40,6 +40,7 @@ const FirebaseLogin = ({ ...others }) => {
   const [pass, setPass] = useState("");
   const dispatch = useDispatch();
   const handleChangeB = () => {
+ 
     Http.post("/api/auth/sigin", { Email: email, Password: pass })
       .then((data) => {
         const token = data.data.token;

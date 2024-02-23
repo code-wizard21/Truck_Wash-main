@@ -1,20 +1,25 @@
-const dbConfig = require("../config/db.config.js");
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize(dbConfig.db, dbConfig.user, dbConfig.password, {
-  host: dbConfig.host,
-  dialect: dbConfig.dialect,
 
-  pool: {
-    max: dbConfig.pool.max,
-    min: dbConfig.pool.min,
-    acquire: dbConfig.pool.acquire,
-    idle: dbConfig.pool.idle,
-  },
+const Sequelize = require("sequelize");
+const {
+  user,
+  password,
+  host,
+  port,
+  database,
+  dialect,
+  pool,
+} = require("../config.js");
+
+const sequelize = new Sequelize(database, user, password, {
+  host,
+  port,
+  dialect,
+  pool,
 });
 
 const db = {};
 
-db.Sequelize = Sequelize;
+
 db.sequelize = sequelize;
 
 db.userlist = require("./model/user.model.js")(sequelize, Sequelize);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -22,6 +22,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { styled } from "@mui/material/styles";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Http from "../../../utils/http";
 // ... Your rows data here
 function createData(cname, cnumber) {
   return { cname, cnumber };
@@ -85,11 +86,11 @@ function CollapsibleRow({ row, isMobile }) {
 
         <TableCell component="th" scope="row">
           <div className="accept">
-            <span> {row.cname}</span>
+            <span> {row.Email}</span>
           </div>
         </TableCell>
 
-        {!isMobile && <TableCell>{row.cnumber}</TableCell>}
+        {!isMobile && <TableCell>{row.PhoneNumber}</TableCell>}
 
         {!isMobile && (
           <>
@@ -113,7 +114,7 @@ function CollapsibleRow({ row, isMobile }) {
                         Phone Number
                       </TableCell>
                       <TableCell>
-                        <span> {row.cnumber}</span>
+                        <span> {row.PhoneNumber}</span>
                       </TableCell>
                     </TableRow>
 
@@ -141,13 +142,40 @@ function CollapsibleRow({ row, isMobile }) {
 export default function ResponsiveCollapsibleTable() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+  const [washerName, setWasherName] = useState("");
+  const [washerNumber, setWashNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [washerList, setWasherList] = useState([]);
   const [open, setOpen] = React.useState(false);
+  useEffect(() => {
+    getWasher();
+  }, []);
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleOk = () => {
+    setOpen(false);
+    Http.post("/api/wash/register", {
+      name: washerName,
+      password: password,
+      number: washerNumber,
+    })
+      .then((data) => {
+        console.log("customer");
+        getWasher();
+      })
+      .catch((err) => {});
+  };
+  const getWasher = () => {
+    Http.get("/api/wash/getWasher")
+      .then((data) => {
+        console.log(data.data);
+        setWasherList(data.data);
+      })
+      .catch((err) => {});
   };
 
   return (
@@ -198,8 +226,8 @@ export default function ResponsiveCollapsibleTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <CollapsibleRow key={row.name} row={row} isMobile={isMobile} />
+              {washerList.map((row) => (
+                <CollapsibleRow key={row.id} row={row} isMobile={isMobile} />
               ))}
             </TableBody>
           </Table>
@@ -211,11 +239,13 @@ export default function ResponsiveCollapsibleTable() {
         aria-labelledby="child-modal-title"
         aria-describedby="child-modal-description"
       >
-        <Box sx={{ 
-            ...style, 
-            width: { xs: '100%', sm: '80%', md: '60%', lg: '40%' }, // adjust the width at different breakpoints
-            mx: 'auto' // center the box horizontally
-        }}>
+        <Box
+          sx={{
+            ...style,
+            width: { xs: "100%", sm: "80%", md: "60%", lg: "40%" }, // adjust the width at different breakpoints
+            mx: "auto", // center the box horizontally
+          }}
+        >
           <Container maxWidth="lg">
             <Typography component="h1" variant="h4" align="center">
               Add Member
@@ -228,22 +258,36 @@ export default function ResponsiveCollapsibleTable() {
                   name="carcode"
                   label="Name"
                   variant="standard"
+                  value={washerName}
+                  onChange={(e) => setWasherName(e.target.value)}
                   fullWidth
                 />
               </Grid>
-
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  id="standard-basic"
+                  name="carcode"
+                  label="Password"
+                  variant="standard"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
               <Grid item xs={12} sm={12}>
                 <TextField
                   id="standard-basic"
                   name="carcode"
                   label="Number"
                   variant="standard"
+                  value={washerNumber}
+                  onChange={(e) => setWashNumber(e.target.value)}
                   fullWidth
                 />
               </Grid>
             </Grid>
             <Box display="flex" justifyContent="right" m={1} p={1}>
-              <Button variant="contained" color="primary" onClick={handleClose}>
+              <Button variant="contained" color="primary" onClick={handleOk}>
                 OK
               </Button>
               <Button onClick={handleClose}>Close</Button>

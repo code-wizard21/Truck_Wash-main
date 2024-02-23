@@ -15,12 +15,11 @@ import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import logo from "../../assets/images/photo.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
 const pages = ["Products", "Pricing", "Blog"];
 
 function ResponsiveAppBar() {
   const theme = useTheme();
-   const [isLogIn, setisLogIn] = useState(false);
+  const [isLogIn, setisLogIn] = useState(false);
   const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -29,37 +28,32 @@ function ResponsiveAppBar() {
     } else {
       setisLogIn(false);
     }
-
-  }, [auth.isLoggedIn]); 
+  }, [auth.isLoggedIn]);
   const settings = isLogIn ? ["Change Password", "Logout"] : ["LogIn"];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
   const [elevateOnScroll, setElevateOnScroll] = useState(false);
-const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const handleScroll = () => {
     const elevated = window.scrollY > 0;
     setElevateOnScroll(elevated);
   };
-
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
   const handleMenuItemClick = (e) => {
     if (e == "LogIn") {
       navigate("/login");
@@ -81,7 +75,6 @@ const dispatch = useDispatch();
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <img src={logo} alt="logo" sx={{ width: isMobile ? 100 : 150 }} />
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -119,7 +112,6 @@ const dispatch = useDispatch();
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
