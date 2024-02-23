@@ -6,4 +6,5 @@ const Http = axios.create({
     Authorization: `Bearer ${token}`,
   },
 });
+
 export default Http;

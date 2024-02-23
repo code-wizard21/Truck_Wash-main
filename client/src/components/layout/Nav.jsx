@@ -16,10 +16,12 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate from react
 import logo from "../../assets/images/photo.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 const pages = ["Products", "Pricing", "Blog"];
+
 function ResponsiveAppBar() {
   const theme = useTheme();
   const [isLogIn, setisLogIn] = useState(false);
   const auth = useSelector((state) => state.auth);
+
   useEffect(() => {
     if (auth.isLoggedIn) {
       setisLogIn(true);
