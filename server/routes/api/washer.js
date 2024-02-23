@@ -8,6 +8,8 @@ router.get("/getAllList", washController.getAllList);
 router.post("/getAcceptList", washController.getAcceptList);
 router.get("/getAllWashed", washController.getAllWashed);
 router.post("/setSelectWashed", washController.setSelectWashed);
+router.get("/getWasher", washController.getWasher);
+
 
 
 module.exports = router;

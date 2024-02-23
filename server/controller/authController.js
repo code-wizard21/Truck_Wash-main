@@ -4,20 +4,22 @@ const bcrypt = require("bcrypt");
 const db = require("../models");
 const Userlist = db.userlist;
 exports.Register = async (req, res) => {
+  console.log(req.body);
+ 
   // Create a Userlist
-  const hashedPassword = await bcrypt.hash(req.body.Password, 10);
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
   const userlist = {
-    Name: req.body.Name,
-    Email: req.body.Email,
-    Birthday: req.body.Birthday,
+    Name: req.body.name,
+    Email: req.body.email,
     Password: hashedPassword,
-    Job: req.body.Job,
-    Gender: req.body.Gender,
+    Job: "customer",
+    PhoneNumber: req.body.phone,
   };
   // Save Tutorial in the database
   Userlist.create(userlist)
     .then((data) => {
       // console.log(data.dataValues)
+
       res.send(data);
     })
     .catch((err) => {
@@ -27,8 +29,19 @@ exports.Register = async (req, res) => {
       });
     });
 };
+
+exports.getCustomer = async (req, res) => {
+  const customer = await Userlist.findAll({
+    where: {
+      Job: "customer",
+    },
+  });
+  res.send(customer);
+};
+
 exports.signin = async (req, res) => {
   try {
+    console.log(req.body)
     const user = await Userlist.findOne({
       where: { Email: req.body.Email },
     });

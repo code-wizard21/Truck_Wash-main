@@ -1,6 +1,30 @@
 const db = require("../models");
+const bcrypt = require("bcrypt");
 const Customerlist = db.customer;
-exports.Register = () => {};
+const Userlist = db.userlist;
+exports.Register = async (req,res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  const userlist = {
+    Email: req.body.name,
+    // Email: req.body.email,
+    Password: hashedPassword,
+    Job: "washer",
+    PhoneNumber: req.body.number,
+  };
+  // Save Tutorial in the database
+  Userlist.create(userlist)
+    .then((data) => {
+      // console.log(data.dataValues)
+
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the userlist.",
+      });
+    });
+};
 exports.getAllList = async (req, res) => {
   console.log(req.body);
   const customerlist = await Customerlist.findAll({
@@ -50,4 +74,12 @@ exports.setSelectWashed = async (req,res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+}
+exports.getWasher = async (req,res) => {
+  const washer = await Userlist.findAll({
+    where: {
+      Job: "washer",
+    },
+  });
+  res.send(washer);
 }
