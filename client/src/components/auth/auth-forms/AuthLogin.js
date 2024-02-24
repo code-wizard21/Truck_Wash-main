@@ -33,12 +33,17 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import Http from "../../../utils/http";
 import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
   const scriptedRef = useScriptRef();
   const [checked, setChecked] = useState(true);
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+
+ 
+
+
   const dispatch = useDispatch();
 
   const onSubmit = () => {
@@ -65,7 +70,9 @@ const FirebaseLogin = ({ ...others }) => {
       })
       .catch((err) => {
         console.log(err);
-        alert('The Input value is invaild');
+    
+        // handleClick({ vertical: 'top', horizontal: 'right' })
+        // alert('The Input value is invaild');
       });
   };
 
@@ -258,6 +265,7 @@ const FirebaseLogin = ({ ...others }) => {
           </>
         )}
       </Formik>
+
     </>
   );
 };

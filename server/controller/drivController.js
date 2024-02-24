@@ -7,7 +7,7 @@ exports.Register = async (req,res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const userlist = {
       Name: req.body.name,
-      // Email: req.body.email,
+      Email: req.body.email,
       Password: hashedPassword,
       Job: "driver",
       PhoneNumber: req.body.number,
@@ -52,4 +52,27 @@ exports.getDriver = async (req,res) => {
     },
   });
   res.send(driver);
+}
+exports.deleteItemDriver = async (req,res)=>{
+  const id = req.body.id;
+  try {
+    const user = await Userlist.destroy({
+      where: {
+        PhoneNumber: id,
+      },
+    });
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+exports.getDriverlist = async (req,res) => {
+  const customer = await Userlist.findAll({
+    where: {
+      Job: "driver",
+    },
+  });
+  res.send(customer);
 }
