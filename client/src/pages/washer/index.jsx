@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {  Tab, Box } from "@mui/material";
+import { Tab, Box } from "@mui/material";
 import { TabPanel, TabContext, TabList } from "@mui/lab";
 import Accept from "./accecpint";
 import Washing from "./washing";
 import Request from "./request";
-// import axios from "axios";
 import Http from "../../utils/http";
 export default function LabTabs() {
   const [value, setValue] = useState("1");
@@ -20,27 +19,34 @@ export default function LabTabs() {
   const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
   useEffect(() => {
-    // if (!auth.isLoggedIn) {
-    //   navigate("/");
-    // }
-  }, []);
+    if (!auth.isLoggedIn) {
+      navigate("/");
+    }
+  }, [auth.isLoggedI, navigate]);
+
   useEffect(() => {
     Http.get("/api/wash/getAllList")
       .then((data) => {
         setCusList(data.data);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
     Http.post("/api/wash/getAcceptList", { name: auth.user.name })
       .then((data) => {
         setCusAccepted(data.data);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
     Http.get("/api/wash/getAllWashed")
       .then((data) => {
         setCusWashed(data.data);
       })
-      .catch((err) => {});
-  }, [flag]);
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [flag, auth.user.name]);
 
   return (
     <Box

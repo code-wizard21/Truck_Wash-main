@@ -59,15 +59,15 @@ export default function LabTabs() {
               },
             }}
           >
-            <Tab label="Accepted" value="2" />
-            <Tab label="Washed" value="3" />
+            <Tab label="Accepted" value="1" />
+            <Tab label="Washed" value="2" />
           </TabList>
         </Box>
 
-        <TabPanel value="2">
+        <TabPanel value="1">
           <Accept data={cusList} />
         </TabPanel>
-        <TabPanel value="3">
+        <TabPanel value="2">
           <Washing data={cusWashed} />
         </TabPanel>
       </TabContext>

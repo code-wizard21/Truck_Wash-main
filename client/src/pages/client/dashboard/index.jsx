@@ -20,12 +20,16 @@ export default function LabTabs() {
       .then((data) => {
         setCusData(data.data);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
     Http.post("/api/cus/findAcceptCustom", { name: auth.user.name })
       .then((data) => {
         setCusAccept(data.data);
       })
-      .catch((err) => {console.log(err)});
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (

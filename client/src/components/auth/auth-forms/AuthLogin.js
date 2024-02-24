@@ -16,7 +16,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-
+import Form from "muicss/lib/react/form";
+import Input from "muicss/lib/react/input";
 // third party
 import * as Yup from "yup";
 import { Formik } from "formik";
@@ -31,7 +32,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import Http from "../../../utils/http";
-
+import Alert from '@mui/material/Alert';
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
   const scriptedRef = useScriptRef();
@@ -39,18 +40,15 @@ const FirebaseLogin = ({ ...others }) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const dispatch = useDispatch();
-  const handleChangeB = () => {
- 
+
+  const onSubmit = () => {
     Http.post("/api/auth/sigin", { Email: email, Password: pass })
       .then((data) => {
         const token = data.data.token;
-        console.log(token);
-        // Login successful, store the token in local storage
         localStorage.setItem("authToken", token);
         if (token) {
           axios.defaults.headers.common["Authorization"] = "Bearer " + token;
         } else {
-          // If there is no token, delete the authorization header
           delete axios.defaults.headers.common["Authorization"];
         }
         const decodedToken = jwtDecode(token);
@@ -67,10 +65,12 @@ const FirebaseLogin = ({ ...others }) => {
       })
       .catch((err) => {
         console.log(err);
+        alert('The Input value is invaild');
       });
   };
 
   const [showPassword, setShowPassword] = useState(false);
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -95,6 +95,7 @@ const FirebaseLogin = ({ ...others }) => {
             <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
           </Box>
         </Grid>
+
         <Grid
           item
           xs={12}
@@ -116,13 +117,7 @@ const FirebaseLogin = ({ ...others }) => {
           password: "",
           submit: null,
         }}
-        validationSchema={Yup.object().shape({
-          email: Yup.string()
-            .email("Must be a valid email")
-            .max(255)
-            .required("Email is required"),
-          password: Yup.string().max(255).required("Password is required"),
-        })}
+
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
             if (scriptedRef.current) {
@@ -147,44 +142,34 @@ const FirebaseLogin = ({ ...others }) => {
           isSubmitting,
           touched,
         }) => (
-          <form onSubmit={handleSubmit} {...others}>
+          <>
             <FormControl
               fullWidth
-              error={Boolean(touched.email && errors.email)}
               sx={{ ...theme.typography.customInput }}
               margin="normal"
             >
               <InputLabel
-                marginBottom="10"
+                style={{ marginBottom: "10px" }}
                 htmlFor="outlined-adornment-email-login"
+                required
               >
                 Email Address / Username
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-email-login"
                 type="email"
-                marginBottom="10"
+                style={{ marginBottom: "10px" }}
                 value={email}
                 name="email"
                 onBlur={handleBlur}
-                // onChange={handleChange}
                 onChange={(e) => setEmail(e.target.value)}
                 label="Email Address / Username"
                 inputProps={{}}
               />
-              {/* {touched.email && errors.email && (
-                <FormHelperText
-                  error
-                  id="standard-weight-helper-text-email-login"
-                >
-                  {errors.email}
-                </FormHelperText>
-              )} */}
             </FormControl>
 
             <FormControl
               fullWidth
-              error={Boolean(touched.password && errors.password)}
               sx={{ ...theme.typography.customInput }}
               margin="normal"
             >
@@ -254,7 +239,6 @@ const FirebaseLogin = ({ ...others }) => {
                 <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
-
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
                 <Button
@@ -265,13 +249,13 @@ const FirebaseLogin = ({ ...others }) => {
                   type="submit"
                   variant="contained"
                   color="secondary"
-                  onClick={handleChangeB}
+                  onClick={onSubmit}
                 >
                   Sign in
                 </Button>
               </AnimateButton>
             </Box>
-          </form>
+          </>
         )}
       </Formik>
     </>
