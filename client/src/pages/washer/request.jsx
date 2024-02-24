@@ -56,7 +56,9 @@ function CollapsibleRow({ props, row, isMobile }) {
         props.setData(data.data);
         props.setFlag(true);
       })
-      .catch((err) => {console.log(err)});
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <>
@@ -89,19 +91,18 @@ function CollapsibleRow({ props, row, isMobile }) {
               <span> {row.Date}</span>
               {/* </div> */}
             </TableCell>
-            <TableCell>
-              <TableCell align="right">
-                <IconButton
-                  color="secondary"
-                  aria-label="add an alarm"
-                  onClick={() => onAccepted(row.CarNumber)}
-                >
-                  <CheckIcon />
-                </IconButton>
-                <IconButton color="secondary" aria-label="add an alarm">
-                  <ClearIcon />
-                </IconButton>
-              </TableCell>
+
+            <TableCell align="right">
+              <IconButton
+                color="secondary"
+                aria-label="add an alarm"
+                onClick={() => onAccepted(row.CarNumber)}
+              >
+                <CheckIcon />
+              </IconButton>
+              <IconButton color="secondary" aria-label="add an alarm">
+                <ClearIcon />
+              </IconButton>
             </TableCell>
           </>
         )}

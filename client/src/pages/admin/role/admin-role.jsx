@@ -324,11 +324,22 @@ export default function ResponsiveCollapsibleTable() {
 
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
+                <TextField
+                  id="standard-basic"
+                  name="carcode"
+                  label="Name"
+                  variant="standard"
+                  value={clientName}
+                  onChange={(e) => setClientName(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
                 <Grid item xs={12} sm={12}>
                   <TextField
                     id="standard-basic"
                     name="carcode"
-                    label="ID"
+                    label="Enail"
                     variant="standard"
                     fullWidth
                     value={clientId}
@@ -346,22 +357,13 @@ export default function ResponsiveCollapsibleTable() {
                     fullWidth
                   />
                 </Grid>
-                <TextField
-                  id="standard-basic"
-                  name="carcode"
-                  label="Name"
-                  variant="standard"
-                  value={clientName}
-                  onChange={(e) => setClientName(e.target.value)}
-                  fullWidth
-                />
               </Grid>
 
               <Grid item xs={12} sm={12}>
                 <TextField
                   id="standard-basic"
                   name="carcode"
-                  label="Number"
+                  label="PHone Number"
                   variant="standard"
                   value={clientNumber}
                   onChange={(e) => setCliNumber(e.target.value)}

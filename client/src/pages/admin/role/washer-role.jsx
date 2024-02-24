@@ -24,14 +24,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Http from "../../../utils/http";
 // ... Your rows data here
-function createData(cname, cnumber) {
-  return { cname, cnumber };
-}
-const rows = [
-  createData("INC", " (306) 529.6419"),
-  createData("RTC", " (306) 529.6419"),
-  createData("IDH", " (306) 529.6419"),
-];
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {

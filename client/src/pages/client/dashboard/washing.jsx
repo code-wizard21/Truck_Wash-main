@@ -30,10 +30,10 @@ const rows = [
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: 'white',
-    color: 'black',
-    fontWeight:'bold',
-    fontSize:'18px'
+    backgroundColor: "white",
+    color: "black",
+    fontWeight: "bold",
+    fontSize: "18px",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -49,8 +49,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 2,
   },
 }));
-
-
 
 function CollapsibleRow({ row, isMobile }) {
   const [open, setOpen] = useState(false);
@@ -143,8 +141,8 @@ export default function ResponsiveCollapsibleTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <CollapsibleRow key={row.name} row={row} isMobile={isMobile} />
+          {rows.map((row, index) => (
+            <CollapsibleRow key={index} row={row} isMobile={isMobile} />
           ))}
         </TableBody>
       </Table>

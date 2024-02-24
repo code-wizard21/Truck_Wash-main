@@ -55,6 +55,8 @@ ToggleCustomTheme.propTypes = {
 };
 
 export default function LandingPage() {
+
+  
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
