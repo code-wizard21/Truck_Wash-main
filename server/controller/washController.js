@@ -2,11 +2,11 @@ const db = require("../models");
 const bcrypt = require("bcrypt");
 const Customerlist = db.customer;
 const Userlist = db.userlist;
-exports.Register = async (req,res) => {
+exports.Register = async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   const userlist = {
-    Email: req.body.name,
-    // Email: req.body.email,
+    Name: req.body.name,
+    Email: req.body.email,
     Password: hashedPassword,
     Job: "washer",
     PhoneNumber: req.body.number,
@@ -44,7 +44,7 @@ exports.getAcceptList = async (req, res) => {
   });
   res.send(customerlist);
 };
-exports.getAllWashed = async (req,res) => {
+exports.getAllWashed = async (req, res) => {
   const customerlist = await Customerlist.findAll({
     where: {
       State: "washed",
@@ -52,9 +52,9 @@ exports.getAllWashed = async (req,res) => {
   });
   // console.log("washed",customerlist)
   res.send(customerlist);
-}
-exports.setSelectWashed = async (req,res) => {
-  console.log("1221212121",req.body)
+};
+exports.setSelectWashed = async (req, res) => {
+  console.log("1221212121", req.body);
   try {
     const user = await Customerlist.update(
       { State: "washed" },
@@ -74,12 +74,34 @@ exports.setSelectWashed = async (req,res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-}
-exports.getWasher = async (req,res) => {
+};
+exports.getWasher = async (req, res) => {
   const washer = await Userlist.findAll({
     where: {
       Job: "washer",
     },
   });
   res.send(washer);
+};
+exports.deleteItemWasher = async (req, res) => {
+  const id = req.body.id;
+  try {
+    const user = await Userlist.destroy({
+      where: {
+        PhoneNumber: id,
+      },
+    });
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+exports.getWasherlist =async (req,res) =>{
+  const customer = await Userlist.findAll({
+    where: {
+      Job: "washer",
+    },
+  });
+  res.send(customer);
 }

@@ -60,13 +60,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function CollapsibleRow({ props, row, isMobile }) {
+function CollapsibleRow({ props, row, isMobile, index }) {
   const [open, setOpen] = useState(false);
   const getCustomer = () => {
     Http.get("/api/auth/getCustomer")
       .then((data) => {
         // console.log(data.data)
-        props.setCustomList(data.data);
+        props(data.data);
       })
       .catch((err) => {});
   };
@@ -95,7 +95,12 @@ function CollapsibleRow({ props, row, isMobile }) {
         )}
         <TableCell component="th" scope="row">
           <div className="accept">
-            <span> {row.id}</span>
+            <span> {++index}</span>
+          </div>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          <div className="accept">
+            <span> {row.Name}</span>
           </div>
         </TableCell>
         <TableCell component="th" scope="row">
@@ -248,7 +253,16 @@ export default function ResponsiveCollapsibleTable() {
           mb={1}
           sx={{ width: 1 }} // makes the Stack take the full width of the Container
         >
-          <Box flexGrow={1}></Box>
+          <Box flexGrow={1}>
+            <Typography
+              component="h1"
+              variant="h4"
+              align="center"
+              marginBottom={"40px"}
+            >
+              Mange Client
+            </Typography>
+          </Box>
           <Button
             variant="contained"
             color="secondary"
@@ -259,7 +273,7 @@ export default function ResponsiveCollapsibleTable() {
               m: 1, // set margin (example: 1)
             }}
           >
-            New User
+            Add Client
           </Button>
         </Stack>
 
@@ -269,8 +283,9 @@ export default function ResponsiveCollapsibleTable() {
               <TableRow>
                 {isMobile && <TableCell />}
                 {isMobile && <TableCell />}
-                <StyledTableCell>NO</StyledTableCell>
                 <StyledTableCell>ID</StyledTableCell>
+                <StyledTableCell>Name</StyledTableCell>
+                <StyledTableCell>Email</StyledTableCell>
 
                 {!isMobile && (
                   <>
@@ -282,9 +297,10 @@ export default function ResponsiveCollapsibleTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {cutomerList.map((row) => (
+              {cutomerList.map((row, index) => (
                 <CollapsibleRow
                   props={setCustomList}
+                  index={index}
                   key={row.id}
                   row={row}
                   isMobile={isMobile}
@@ -319,7 +335,7 @@ export default function ResponsiveCollapsibleTable() {
         >
           <Container maxWidth="lg">
             <Typography component="h1" variant="h4" align="center">
-              Add Member
+              Add Client
             </Typography>
 
             <Grid container spacing={3}>
@@ -339,7 +355,7 @@ export default function ResponsiveCollapsibleTable() {
                   <TextField
                     id="standard-basic"
                     name="carcode"
-                    label="Enail"
+                    label="Email"
                     variant="standard"
                     fullWidth
                     value={clientId}
@@ -352,6 +368,7 @@ export default function ResponsiveCollapsibleTable() {
                     name="carcode"
                     label="Password"
                     variant="standard"
+                    type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     fullWidth

@@ -59,9 +59,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function CollapsibleRow({ row, isMobile }) {
+function CollapsibleRow({ props, row, isMobile, index }) {
   const [open, setOpen] = useState(false);
-
+  const onDelete = (data) => {
+    console.log(data);
+    const getCustomer = () => {
+      Http.get("/api/driv/getDriver")
+        .then((data) => {
+          // console.log(data.data)
+          props(data.data);
+        })
+        .catch((err) => {});
+    };
+    Http.post("/api/driv/deleteItemDriver", {
+      id: data,
+    })
+      .then((data) => {
+        getCustomer();
+      })
+      .catch((err) => {});
+  };
   return (
     <>
       <StyledTableRow
@@ -75,14 +92,45 @@ function CollapsibleRow({ row, isMobile }) {
             </IconButton>
           </TableCell>
         )}
-
+        <TableCell component="th" scope="row">
+          <div className="accept">
+            <span> {++index}</span>
+          </div>
+        </TableCell>
         <TableCell component="th" scope="row">
           <div className="accept">
             <span> {row.Name}</span>
           </div>
         </TableCell>
-
+        {!isMobile && (
+          <TableCell component="th" scope="row">
+            <div className="accept">
+              <span> {row.Email}</span>
+            </div>
+          </TableCell>
+        )}
+        {!isMobile && (
+          <TableCell component="th" scope="row">
+            <div className="accept">
+              <span> {row.Password}</span>
+            </div>
+          </TableCell>
+        )}
         {!isMobile && <TableCell>{row.PhoneNumber}</TableCell>}
+        {!isMobile && (
+          <>
+            <TableCell>
+              <IconButton
+                color="secondary"
+                aria-label="add an alarm"
+                onClick={() => onDelete(row.PhoneNumber)}
+              >
+                <ClearIcon />
+              </IconButton>
+            </TableCell>
+          </>
+        )}
+        {/* {!isMobile && <TableCell>{row.PhoneNumber}</TableCell>}
 
         {!isMobile && (
           <>
@@ -92,7 +140,7 @@ function CollapsibleRow({ row, isMobile }) {
               </IconButton>
             </TableCell>
           </>
-        )}
+        )} */}
       </StyledTableRow>
       {isMobile && (
         <TableRow>
@@ -116,7 +164,11 @@ function CollapsibleRow({ row, isMobile }) {
                       </TableCell>
 
                       <TableCell align="right">
-                        <IconButton color="secondary" aria-label="add an alarm">
+                        <IconButton
+                          color="secondary"
+                          aria-label="add an alarm"
+                          onClick={() => onDelete(row.PhoneNumber)}
+                        >
                           <ClearIcon />
                         </IconButton>
                       </TableCell>
@@ -135,6 +187,7 @@ export default function ResponsiveCollapsibleTable() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [driverName, setDriverName] = useState("");
+  const [email, setEmail] = useState("");
   const [driverNumber, setDriNumber] = useState("");
   const [password, setPassword] = useState("");
   const [driverList, setDriverList] = useState([]);
@@ -152,6 +205,7 @@ export default function ResponsiveCollapsibleTable() {
     setOpen(false);
     Http.post("/api/driv/register", {
       name: driverName,
+      email: email,
       password: password,
       number: driverNumber,
     })
@@ -187,7 +241,16 @@ export default function ResponsiveCollapsibleTable() {
           mb={1}
           sx={{ width: 1 }} // makes the Stack take the full width of the Container
         >
-          <Box flexGrow={1}></Box>
+          <Box flexGrow={1}>
+            <Typography
+              component="h1"
+              variant="h4"
+              align="center"
+              marginBottom={"40px"}
+            >
+              Mange Driver
+            </Typography>
+          </Box>
           <Button
             variant="contained"
             color="secondary"
@@ -198,7 +261,7 @@ export default function ResponsiveCollapsibleTable() {
               m: 1, // set margin (example: 1)
             }}
           >
-            New User
+            Add Driver
           </Button>
         </Stack>
 
@@ -208,10 +271,13 @@ export default function ResponsiveCollapsibleTable() {
               <TableRow>
                 {isMobile && <TableCell />}
                 {isMobile && <TableCell />}
+                <StyledTableCell>ID</StyledTableCell>
                 <StyledTableCell>Name</StyledTableCell>
 
                 {!isMobile && (
                   <>
+                    <StyledTableCell>Email</StyledTableCell>
+                    <StyledTableCell>Password</StyledTableCell>
                     <StyledTableCell>Phone Number</StyledTableCell>
                     <StyledTableCell>Action</StyledTableCell>
                   </>
@@ -219,8 +285,14 @@ export default function ResponsiveCollapsibleTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {driverList.map((row) => (
-                <CollapsibleRow key={row.id} row={row} isMobile={isMobile} />
+              {driverList.map((row, index) => (
+                <CollapsibleRow
+                  props={setDriverList}
+                  key={row.id}
+                  row={row}
+                  isMobile={isMobile}
+                  index={index}
+                />
               ))}
             </TableBody>
           </Table>
@@ -241,7 +313,7 @@ export default function ResponsiveCollapsibleTable() {
         >
           <Container maxWidth="lg">
             <Typography component="h1" variant="h4" align="center">
-              Add Member
+              Add Driver
             </Typography>
 
             <Grid container spacing={3}>
@@ -260,8 +332,21 @@ export default function ResponsiveCollapsibleTable() {
                 <TextField
                   id="standard-basic"
                   name="carcode"
+                  label="Email"
+                  variant="standard"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  id="standard-basic"
+                  name="carcode"
                   label="Password"
                   variant="standard"
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   fullWidth

@@ -21,14 +21,14 @@ function CheckoutPage() {
   const [trackCode, setTrackCode] = useState("");
   const [description, setDescription] = useState("");
   const [showErrors, setShowErrors] = useState(false);
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState(dayjs());
 
   const navigate = useNavigate();
   const auth = useSelector((state) => state.auth);
   useEffect(() => {
-    // if (!auth.isLoggedIn) {
-    //   navigate("/");
-    // }
+    if (!auth.isLoggedIn) {
+      navigate("/");
+    }
   }, []);
   const validate = () => {
     if (!trackCode && !description) {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 import { styled } from "@mui/system";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Sidebar from "./sidebar";
@@ -24,7 +24,13 @@ function Admin() {
   };
 
   return (
-    <AdminStyled>
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        py: 8,
+      }}
+    >
       <CssBaseline />
       <Grid container>
         <Grid item xs={12} sm={3}>
@@ -38,7 +44,7 @@ function Admin() {
           <Outlet />
         </Grid>
       </Grid>
-    </AdminStyled>
+    </Box>
   );
 }
 export default Admin;
